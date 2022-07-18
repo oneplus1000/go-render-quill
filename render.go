@@ -211,7 +211,7 @@ func (o *Op) writeBlock(vars *renderVars) {
 
 	// Avoid empty paragraphs and "\n" in the output for text blocks.
 	if o.Data == "" && block.tagName == "p" && vars.tempBuf.Len() == 0 {
-		o.Data = "<br>"
+		o.Data = "<br />"
 	}
 
 	if block.tagName != "" {
