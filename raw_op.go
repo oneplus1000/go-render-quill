@@ -11,7 +11,18 @@ type rawOp struct {
 	Insert interface{} `json:"insert"`
 
 	// Attrs contains the "attributes" property of the op.
-	Attrs map[string]interface{} `json:"attributes"`
+	Attrs map[string]interface{} `json:"attributes,omitempty"`
+}
+
+func (ro *rawOp) bind(o Op) error {
+	if o.Type == "text" {
+		ro.Insert = o.Data
+	} else {
+		buff := make(map[string]interface{})
+		buff[o.Type] = o.Data
+		ro.Insert = buff
+	}
+	return nil
 }
 
 // makeOp takes a raw Delta op as extracted from the JSON and turns it into an Op to make it usable for rendering.
@@ -61,7 +72,7 @@ func extractString(v interface{}) string {
 	case string:
 		return val
 	case bool:
-		if val == true {
+		if val {
 			return "y"
 		}
 	case float64:
